@@ -7,7 +7,24 @@ const API = `http://localhost:6001/listings`;
 
 function App() {
 
+  let [filter, updateFilter] = useState("")
   let [listings, updateListings] = useState([])
+
+  function handleFilter (newSearch) {
+    console.log(newSearch)
+    updateFilter(newSearch);
+  }
+
+  function deleteListing(key) {
+    console.log("CLICKED DELETE")
+    // fetch(`API/${key}`, {
+    //     method: "DELETE", 
+    //     headers: {
+    //       "Content-Type" : "application/json", },
+    //     })
+    //   .then(r => r.json())
+    //   // .then(data)
+  }
 
   useEffect(() => {
     fetch(API)
@@ -20,10 +37,15 @@ function App() {
       });
   }, []);
 
+  const filteredListings = listings
+    .filter( (listing) => 
+      listing.description.toLowerCase()
+        .includes( filter.toLowerCase() ) );
+
   return (
     <div className="app">
-      <Header />
-      <ListingsContainer listings = {listings} />
+      <Header updateFilter = {handleFilter} />
+      <ListingsContainer handleDeleteEvent = {deleteListing} listings = {filteredListings} />
     </div>
   );
 }
